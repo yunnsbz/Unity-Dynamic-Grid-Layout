@@ -28,8 +28,16 @@ public class DynamicGridLayoutEditor : Editor
                 break;
 
             case DynamicGridLayout.FitType.UNIFORM:
-                EditorGUILayout.PropertyField(serializedObject.FindProperty("fitX"));
-                EditorGUILayout.PropertyField(serializedObject.FindProperty("fitY"));
+                var fitX = serializedObject.FindProperty("fitX");
+                var fitY = serializedObject.FindProperty("fitY");
+                EditorGUILayout.BeginHorizontal();
+                EditorGUILayout.LabelField("Fit", GUILayout.Width(EditorGUIUtility.labelWidth - 1));
+                EditorGUILayout.LabelField("X", GUILayout.MaxWidth(13));
+                fitX.boolValue = EditorGUILayout.ToggleLeft("", fitX.boolValue, GUILayout.Width(20));
+                GUILayout.Space(20);
+                EditorGUILayout.LabelField("Y", GUILayout.MaxWidth(13));
+                fitY.boolValue = EditorGUILayout.ToggleLeft("", fitY.boolValue, GUILayout.Width(20));
+                EditorGUILayout.EndHorizontal();
                 break;
         }
         
@@ -56,8 +64,16 @@ public class DynamicGridLayoutEditor : Editor
         }
         if (gridLayout.childRatio == DynamicGridLayout.ChildRatio.Free)
         {
-            EditorGUILayout.PropertyField(serializedObject.FindProperty("resizeX"));
-            EditorGUILayout.PropertyField(serializedObject.FindProperty("resizeY"));
+            var resizeX = serializedObject.FindProperty("fitX");
+            var resizeY = serializedObject.FindProperty("fitY");
+            EditorGUILayout.BeginHorizontal();
+            EditorGUILayout.LabelField("Resize", GUILayout.Width(EditorGUIUtility.labelWidth - 1));
+            EditorGUILayout.LabelField("X", GUILayout.MaxWidth(13));
+            resizeX.boolValue = EditorGUILayout.ToggleLeft("", resizeX.boolValue, GUILayout.Width(20));
+            GUILayout.Space(20);
+            EditorGUILayout.LabelField("Y", GUILayout.MaxWidth(13));
+            resizeY.boolValue = EditorGUILayout.ToggleLeft("", resizeY.boolValue, GUILayout.Width(20));
+            EditorGUILayout.EndHorizontal();
         }
     }
 

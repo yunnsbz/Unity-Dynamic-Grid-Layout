@@ -55,6 +55,7 @@ public class DynamicGridLayout : LayoutGroup
                     break;
                 case FitType.UNIFORM:
                     fitX = fitY = true;
+                    resizeX = resizeY = false;
                     break;
             }
         }
@@ -66,7 +67,6 @@ public class DynamicGridLayout : LayoutGroup
             }
             if (fitType == FitType.HEIGHT || fitType == FitType.FIXED_ROWS)
             {
-
                 columns = Mathf.CeilToInt(transform.childCount / (float)rows);
             }
 
