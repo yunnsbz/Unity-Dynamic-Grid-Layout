@@ -9,7 +9,7 @@ public class DynamicGridLayoutEditor : Editor
     public override void OnInspectorGUI()
     {
         DynamicGridLayout gridLayout = (DynamicGridLayout)target;
-
+        
         serializedObject.Update();
 
         EditorGUILayout.PropertyField(serializedObject.FindProperty("fitType"));
@@ -37,6 +37,10 @@ public class DynamicGridLayoutEditor : Editor
         EditorGUILayout.PropertyField(serializedObject.FindProperty("cellSize"));
 
         EditorGUILayout.PropertyField(serializedObject.FindProperty("spacing"));
+
+        SerializedProperty paddingProp = serializedObject.FindProperty("m_Padding");
+        EditorGUILayout.PropertyField(paddingProp, true);
+
 
         serializedObject.ApplyModifiedProperties();
     }
