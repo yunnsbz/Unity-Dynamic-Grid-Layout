@@ -10,21 +10,20 @@ public class DynamicGridLayout : LayoutGroup
         UNIFORM,
         WIDTH,
         HEIGHT,
-        FIXEDROWS,
-        FIXEDCOLUMNS
+        FIXED_ROWS,
+        FIXED_COLUMNS
     }
 
     public enum ChildRatio
     {
         Square,
-        Fixed, // belirtttiðin bir orana sabitlenirler
+        Fixed,
         Free
     }
 
-    [Header("Flexible Grid")]
     public FitType fitType = FitType.UNIFORM;
     public ChildRatio childRatio = ChildRatio.Fixed;
-    public Vector2 fixedRatio = new Vector2(4, 1); // Sadece Fixed için kullanýlacak
+    public Vector2 fixedRatio = new Vector2(4, 1);
 
     public int rows;
     public int columns;
@@ -33,6 +32,8 @@ public class DynamicGridLayout : LayoutGroup
 
     public bool fitX;
     public bool fitY;
+    public bool resizeX;
+    public bool resizeY;
 
     public override void CalculateLayoutInputHorizontal()
     {
@@ -57,13 +58,13 @@ public class DynamicGridLayout : LayoutGroup
                     break;
             }
         }
-        if (columns >= 0 && rows >= 0)
+        if (columns > 0 && rows > 0)
         {
-            if (fitType == FitType.WIDTH || fitType == FitType.FIXEDCOLUMNS)
+            if (fitType == FitType.WIDTH || fitType == FitType.FIXED_COLUMNS)
             {
                 rows = Mathf.CeilToInt(transform.childCount / (float)columns);
             }
-            if (fitType == FitType.HEIGHT || fitType == FitType.FIXEDROWS)
+            if (fitType == FitType.HEIGHT || fitType == FitType.FIXED_ROWS)
             {
 
                 columns = Mathf.CeilToInt(transform.childCount / (float)rows);
@@ -78,7 +79,7 @@ public class DynamicGridLayout : LayoutGroup
                 - (padding.top / (float)rows) - (padding.bottom / (float)rows);
 
 
-            // Child Ratio Type'a göre cellSize ayarlanýr
+            
             switch (childRatio)
             {
                 case ChildRatio.Fixed:
@@ -86,27 +87,26 @@ public class DynamicGridLayout : LayoutGroup
                     if (fitY) cellWidth = cellHeight * (fixedRatio.x / fixedRatio.y);
                     break;
 
-                case ChildRatio.Square: // min yada max ayarlanabilir.
+                case ChildRatio.Square: 
                     if (fitX || fitY) cellHeight = cellWidth = Mathf.Min(cellWidth, cellHeight);
                     break;
 
                 case ChildRatio.Free:
-                    // Mevcut cellSize'ý kullan
+                    //fitX = fitY = false;
                     break;
             }
 
+            if(fitX) cellSize.x = cellWidth;
+            if(fitY) cellSize.y = cellHeight;
 
-            cellSize.x = fitX ? cellWidth : cellSize.x;
-            cellSize.y = fitY ? cellHeight : cellSize.y;
-
-            if (fitType == FitType.WIDTH || fitType == FitType.FIXEDCOLUMNS)
+            if (fitType == FitType.WIDTH || fitType == FitType.FIXED_COLUMNS)
             {
                 float totalHeight = (cellHeight * rows) + (spacing.y * (rows - 1)) + padding.top + padding.bottom;
 
                 // RectTransform'un yüksekliðini ayarla
                 rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, totalHeight);
             }
-            if (fitType == FitType.HEIGHT || fitType == FitType.FIXEDROWS)
+            if (fitType == FitType.HEIGHT || fitType == FitType.FIXED_ROWS)
             {
                 float totalWidth = (cellWidth * columns) + (spacing.x * (columns - 1)) + padding.right + padding.left;
 
@@ -133,6 +133,14 @@ public class DynamicGridLayout : LayoutGroup
 
             }
         }
+        if(columns <= 0)
+        {
+            columns = 1;
+        }
+        if (rows <= 0)
+        {
+            rows = 1;
+        }
     }
 
     public override void CalculateLayoutInputVertical()
@@ -142,12 +150,10 @@ public class DynamicGridLayout : LayoutGroup
 
     public override void SetLayoutHorizontal()
     {
-
     }
 
     public override void SetLayoutVertical()
     {
-
     }
 
 
