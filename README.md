@@ -11,21 +11,25 @@ Customizable: Easily tweak grid properties to fit your project’s needs.
 
 Test Scene Included: Comes with a sample scene to showcase how the tool works in action.
 
+Presets: select predefined grid presets to customize grid layouts effortlessly.
+
 ## Updates
 
 This section tracks the progress of the Dynamic Grid Layout Tool, including recent changes and planned enhancements.
 
 ### Recent Updates
 - **06 March 2025**: Initial release of the tool with basic dynamic grid functionality and a test scene.
+- **12 March 2025**: Inspector GUI improvments added. 
 
 ### Planned Features
-- Improved Inspector GUI
 - Integration with Unity’s Layout Group components for enhanced compatibility.
 - Documentation improvements.
 - Alignment options will be added.
 - Support for grid items of different sizes.
 - Custom functions for adding items via script.
 - Ability to adjust the settings of added items in the editor.
+- dynamic spacing
+- saving custom presets
 <br></br>
 
 ## Installation
