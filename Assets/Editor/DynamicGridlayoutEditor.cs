@@ -55,7 +55,11 @@ public class DynamicGridLayoutEditor : Editor
             {
                 case DynamicGridLayout.Presets.vertical_list:
                     gridLayout.fitType = DynamicGridLayout.FitType.FIXED_COLUMNS;
-                    gridLayout.rows = 1;
+                    gridLayout.columns = 1;
+                    gridLayout.childRatio = DynamicGridLayout.ChildRatio.Fixed;
+                    gridLayout.fitY = true;
+                    gridLayout.fitX = true;
+                    
                     EditorGUILayout.PropertyField(serializedObject.FindProperty("fixedRatio"));
                     break;
                 case DynamicGridLayout.Presets.horizontal_list:

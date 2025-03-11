@@ -1,33 +1,12 @@
-
-using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine;
 
 [ExecuteAlways]
 public class DynamicGridLayout : LayoutGroup
 {
-    public enum Presets
-    {
-        Custom,
-        vertical_list, 
-        horizontal_list,
-        item_grid_v
-    }
-
-    public enum FitType
-    {
-        UNIFORM,
-        WIDTH,
-        HEIGHT,
-        FIXED_ROWS,
-        FIXED_COLUMNS
-    }
-
-    public enum ChildRatio
-    {
-        Square,
-        Fixed,
-        Free
-    }
+    public enum Presets { Custom, vertical_list, horizontal_list, item_grid_v }
+    public enum FitType { UNIFORM, WIDTH, HEIGHT, FIXED_ROWS, FIXED_COLUMNS }
+    public enum ChildRatio { Square, Fixed, Free }
 
     public Presets preset = Presets.Custom;
     public FitType fitType = FitType.UNIFORM;
@@ -47,6 +26,28 @@ public class DynamicGridLayout : LayoutGroup
     public override void CalculateLayoutInputHorizontal()
     {
         base.CalculateLayoutInputHorizontal();
+
+        if (columns <= 0) columns = 1;
+        if (rows <= 0) rows = 1;
+
+        switch (preset)
+        {
+            case Presets.vertical_list:
+                fitType = FitType.FIXED_COLUMNS;
+                columns = 1;
+                rows = transform.childCount;
+                break;
+            case Presets.horizontal_list:
+                fitType = FitType.FIXED_ROWS;
+                rows = 1;
+                columns = transform.childCount;
+                break;
+            case Presets.item_grid_v:
+                fitType = FitType.UNIFORM;
+                float squareRoot = Mathf.Sqrt(transform.childCount);
+                rows = columns = Mathf.CeilToInt(squareRoot);
+                break;
+        }
 
         if (fitType == FitType.WIDTH || fitType == FitType.HEIGHT || fitType == FitType.UNIFORM)
         {
@@ -68,102 +69,71 @@ public class DynamicGridLayout : LayoutGroup
                     break;
             }
         }
-        if (columns > 0 && rows > 0)
+
+        if (fitType == FitType.FIXED_COLUMNS || fitType == FitType.WIDTH)
         {
-            if (fitType == FitType.WIDTH || fitType == FitType.FIXED_COLUMNS)
-            {
-                rows = Mathf.CeilToInt(transform.childCount / (float)columns);
-            }
-            if (fitType == FitType.HEIGHT || fitType == FitType.FIXED_ROWS)
-            {
-                columns = Mathf.CeilToInt(transform.childCount / (float)rows);
-            }
-
-            float parentWidth = rectTransform.rect.width;
-            float parentHeight = rectTransform.rect.height;
-
-            float cellWidth = parentWidth / (float)columns - ((spacing.x / (float)columns) * (columns - 1))
-                - (padding.left / (float)columns) - (padding.right / (float)columns);
-            float cellHeight = parentHeight / (float)rows - ((spacing.y / (float)rows) * (rows - 1))
-                - (padding.top / (float)rows) - (padding.bottom / (float)rows);
-
-
-            
-            switch (childRatio)
-            {
-                case ChildRatio.Fixed:
-                    if (fitX) cellHeight = cellWidth * (fixedRatio.y / fixedRatio.x);
-                    if (fitY) cellWidth = cellHeight * (fixedRatio.x / fixedRatio.y);
-                    break;
-
-                case ChildRatio.Square: 
-                    if (fitX || fitY) cellHeight = cellWidth = Mathf.Min(cellWidth, cellHeight);
-                    break;
-
-                case ChildRatio.Free:
-                    //fitX = fitY = false;
-                    break;
-            }
-
-            if(fitX) cellSize.x = cellWidth;
-            if(fitY) cellSize.y = cellHeight;
-
-            if (fitType == FitType.WIDTH || fitType == FitType.FIXED_COLUMNS)
-            {
-                float totalHeight = (cellHeight * rows) + (spacing.y * (rows - 1)) + padding.top + padding.bottom;
-
-                // RectTransform'un yüksekliðini ayarla
-                rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, totalHeight);
-            }
-            if (fitType == FitType.HEIGHT || fitType == FitType.FIXED_ROWS)
-            {
-                float totalWidth = (cellWidth * columns) + (spacing.x * (columns - 1)) + padding.right + padding.left;
-
-                // RectTransform'un yüksekliðini ayarla
-                rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, totalWidth);
-            }
-
-            int columnCount = 0;
-            int rowCount = 0;
-
-
-            for (int i = 0; i < rectChildren.Count; i++)
-            {
-                rowCount = i / columns;
-                columnCount = i % columns;
-
-                var item = rectChildren[i];
-
-                var xPos = (cellSize.x * columnCount) + (spacing.x * columnCount) + padding.left;
-                var yPos = (cellSize.y * rowCount) + (spacing.y * rowCount) + padding.top;
-
-                SetChildAlongAxis(item, 0, xPos, cellSize.x);
-                SetChildAlongAxis(item, 1, yPos, cellSize.y);
-
-            }
+            rows = Mathf.CeilToInt(transform.childCount / (float)columns);
         }
-        if(columns <= 0)
+        if (fitType == FitType.FIXED_ROWS || fitType == FitType.HEIGHT)
         {
-            columns = 1;
+            columns = Mathf.CeilToInt(transform.childCount / (float)rows);
         }
-        if (rows <= 0)
+
+        float parentWidth = rectTransform.rect.width;
+        float parentHeight = rectTransform.rect.height;
+
+        float cellWidth = parentWidth / (float)columns - ((spacing.x / (float)columns) * (columns - 1))
+            - (padding.left / (float)columns) - (padding.right / (float)columns);
+        float cellHeight = parentHeight / (float)rows - ((spacing.y / (float)rows) * (rows - 1))
+            - (padding.top / (float)rows) - (padding.bottom / (float)rows);
+
+        switch (childRatio)
         {
-            rows = 1;
+            case ChildRatio.Fixed:
+                if (fitX) cellHeight = cellWidth * (fixedRatio.y / fixedRatio.x);
+                if (fitY) cellWidth = cellHeight * (fixedRatio.x / fixedRatio.y);
+                break;
+            case ChildRatio.Square:
+                if (fitX || fitY) cellHeight = cellWidth = Mathf.Min(cellWidth, cellHeight);
+                break;
+        }
+
+        if (preset == Presets.Custom && !fitX && !fitY) { /* cellSize manuel kalýr */ }
+        else
+        {
+            if (fitX) cellSize.x = cellWidth;
+            if (fitY) cellSize.y = cellHeight;
+        }
+
+        if (fitType == FitType.FIXED_COLUMNS || fitType == FitType.WIDTH)
+        {
+            float totalHeight = (cellHeight * rows) + (spacing.y * (rows - 1)) + padding.top + padding.bottom;
+            rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, totalHeight);
+        }
+        if (fitType == FitType.FIXED_ROWS || fitType == FitType.HEIGHT)
+        {
+            float totalWidth = (cellWidth * columns) + (spacing.x * (columns - 1)) + padding.right + padding.left;
+            rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, totalWidth);
+        }
+
+        int columnCount = 0;
+        int rowCount = 0;
+
+        for (int i = 0; i < rectChildren.Count; i++)
+        {
+            rowCount = i / columns;
+            columnCount = i % columns;
+
+            var item = rectChildren[i];
+            var xPos = (cellSize.x * columnCount) + (spacing.x * columnCount) + padding.left;
+            var yPos = (cellSize.y * rowCount) + (spacing.y * rowCount) + padding.top;
+
+            SetChildAlongAxis(item, 0, xPos, cellSize.x);
+            SetChildAlongAxis(item, 1, yPos, cellSize.y);
         }
     }
 
-    public override void CalculateLayoutInputVertical()
-    {
-    }
-
-
-    public override void SetLayoutHorizontal()
-    {
-    }
-
-    public override void SetLayoutVertical()
-    {
-    }
-
-
+    public override void CalculateLayoutInputVertical() { }
+    public override void SetLayoutHorizontal() { }
+    public override void SetLayoutVertical() { }
 }
