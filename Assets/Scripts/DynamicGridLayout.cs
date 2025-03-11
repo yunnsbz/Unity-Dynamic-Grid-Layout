@@ -146,16 +146,38 @@ public class DynamicGridLayout : LayoutGroup
             SetChildAlongAxis(item, 1, yPos, cellSize.y);
         }
 
-        // error detecting
+        // negative cellsize and grid size error detecting:
         if (cellSize.x <= 0 || cellSize.y <= 0)
         {
             var adjustmentX = 0 - cellSize.x;
             var adjustmentY = 0 - cellSize.y;
 
-            rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, rectTransform.rect.height + (adjustmentY * 2) * columns);
-            rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, rectTransform.rect.width + (adjustmentX * 2) * rows);
-        }
+            rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, (adjustmentX * 2 * rows) + (spacing.y * (rows - 1)) + padding.top + padding.bottom);
+            rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, (adjustmentY * 2 * columns) + (spacing.x * (columns - 1)) + padding.right + padding.left);
 
+            if (cellSize.x <= 0 || cellSize.y <= 0)
+            {
+                cellSize.x = rectTransform.rect.width / (float)columns - ((spacing.x / (float)columns) * (columns - 1))
+                    - (padding.left / (float)columns) - (padding.right / (float)columns);
+
+                cellSize.y = rectTransform.rect.height / (float)rows - ((spacing.y / (float)rows) * (rows - 1))
+                    - (padding.top / (float)rows) - (padding.bottom / (float)rows);
+
+                for (int i = 0; i < rectChildren.Count; i++)
+                {
+                    rowCount = i / columns;
+                    columnCount = i % columns;
+
+                    var item = rectChildren[i];
+                    var xPos = (cellSize.x * columnCount) + (spacing.x * columnCount) + padding.left;
+                    var yPos = (cellSize.y * rowCount) + (spacing.y * rowCount) + padding.top;
+
+                    SetChildAlongAxis(item, 0, xPos, cellSize.x);
+                    SetChildAlongAxis(item, 1, yPos, cellSize.y);
+                }
+
+            }
+        }
 
     }
 

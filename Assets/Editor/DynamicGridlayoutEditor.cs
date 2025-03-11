@@ -6,7 +6,6 @@ using UnityEngine;
 [CustomEditor(typeof(DynamicGridLayout))]
 public class DynamicGridLayoutEditor : Editor
 {
-
     public override void OnInspectorGUI()
     {
         DynamicGridLayout gridLayout = (DynamicGridLayout)target;
