@@ -6,6 +6,7 @@ using UnityEngine;
 [CustomEditor(typeof(DynamicGridLayout))]
 public class DynamicGridLayoutEditor : Editor
 {
+
     public override void OnInspectorGUI()
     {
         DynamicGridLayout gridLayout = (DynamicGridLayout)target;
@@ -78,18 +79,6 @@ public class DynamicGridLayoutEditor : Editor
 
 
         serializedObject.ApplyModifiedProperties();
-
-        //if(GUILayout.Button("print values"))
-        //{
-        //    string LogText = "";
-
-        //    LogText += "fit type: " + gridLayout.fitType + "\n";
-        //    LogText += "rows: " + gridLayout.rows + "\n";
-        //    LogText += "fixedRatio: " + gridLayout.fixedRatio + "\n";
-        //    LogText += "Child size: " + gridLayout.cellSize + "\n";
-
-        //    Debug.Log(LogText);
-        //}
     }
 
     private void childRatio(DynamicGridLayout gridLayout)

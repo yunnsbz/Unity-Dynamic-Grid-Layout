@@ -23,6 +23,7 @@ public class DynamicGridLayout : LayoutGroup
     public bool resizeX;
     public bool resizeY;
 
+
     public override void CalculateLayoutInputHorizontal()
     {
         base.CalculateLayoutInputHorizontal();
@@ -31,7 +32,6 @@ public class DynamicGridLayout : LayoutGroup
         if (rows <= 0) rows = 1;
         if (fixedRatio.x <= 0) fixedRatio.x = 1;
         if (fixedRatio.y <= 0) fixedRatio.y = 1;
-
 
         switch (preset)
         {
@@ -145,7 +145,20 @@ public class DynamicGridLayout : LayoutGroup
             SetChildAlongAxis(item, 0, xPos, cellSize.x);
             SetChildAlongAxis(item, 1, yPos, cellSize.y);
         }
+
+        // error detecting
+        if (cellSize.x <= 0 || cellSize.y <= 0)
+        {
+            var adjustmentX = 0 - cellSize.x;
+            var adjustmentY = 0 - cellSize.y;
+
+            rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, rectTransform.rect.height + (adjustmentY * 2) * columns);
+            rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, rectTransform.rect.width + (adjustmentX * 2) * rows);
+        }
+
+
     }
+
 
     public override void CalculateLayoutInputVertical() { }
     public override void SetLayoutHorizontal() { }
