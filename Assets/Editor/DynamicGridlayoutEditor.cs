@@ -12,45 +12,83 @@ public class DynamicGridLayoutEditor : Editor
         
         serializedObject.Update();
 
-        EditorGUILayout.PropertyField(serializedObject.FindProperty("fitType"));
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("preset"));
 
-        // fields based on fit type
-        switch (gridLayout.fitType)
+        EditorGUILayout.Space(10);
+
+        if (gridLayout.preset == DynamicGridLayout.Presets.Custom)
         {
-            case DynamicGridLayout.FitType.FIXED_ROWS:
-                EditorGUILayout.PropertyField(serializedObject.FindProperty("rows"));
-                childRatio(gridLayout);
-                break;
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("fitType"));
 
-            case DynamicGridLayout.FitType.FIXED_COLUMNS:
-                EditorGUILayout.PropertyField(serializedObject.FindProperty("columns"));
-                childRatio(gridLayout);
-                break;
+            // fields based on fit type
+            switch (gridLayout.fitType)
+            {
+                case DynamicGridLayout.FitType.FIXED_ROWS:
+                    EditorGUILayout.PropertyField(serializedObject.FindProperty("rows"));
+                    childRatio(gridLayout);
+                    break;
 
-            case DynamicGridLayout.FitType.UNIFORM:
-                var fitX = serializedObject.FindProperty("fitX");
-                var fitY = serializedObject.FindProperty("fitY");
-                EditorGUILayout.BeginHorizontal();
-                EditorGUILayout.LabelField("Fit", GUILayout.Width(EditorGUIUtility.labelWidth - 1));
-                EditorGUILayout.LabelField("X", GUILayout.MaxWidth(13));
-                fitX.boolValue = EditorGUILayout.ToggleLeft("", fitX.boolValue, GUILayout.Width(20));
-                GUILayout.Space(20);
-                EditorGUILayout.LabelField("Y", GUILayout.MaxWidth(13));
-                fitY.boolValue = EditorGUILayout.ToggleLeft("", fitY.boolValue, GUILayout.Width(20));
-                EditorGUILayout.EndHorizontal();
-                break;
+                case DynamicGridLayout.FitType.FIXED_COLUMNS:
+                    EditorGUILayout.PropertyField(serializedObject.FindProperty("columns"));
+                    childRatio(gridLayout);
+                    break;
+
+                case DynamicGridLayout.FitType.UNIFORM:
+                    var fitX = serializedObject.FindProperty("fitX");
+                    var fitY = serializedObject.FindProperty("fitY");
+                    EditorGUILayout.BeginHorizontal();
+                    EditorGUILayout.LabelField("Fit", GUILayout.Width(EditorGUIUtility.labelWidth - 1));
+                    EditorGUILayout.LabelField("X", GUILayout.MaxWidth(13));
+                    fitX.boolValue = EditorGUILayout.ToggleLeft("", fitX.boolValue, GUILayout.Width(20));
+                    GUILayout.Space(20);
+                    EditorGUILayout.LabelField("Y", GUILayout.MaxWidth(13));
+                    fitY.boolValue = EditorGUILayout.ToggleLeft("", fitY.boolValue, GUILayout.Width(20));
+                    EditorGUILayout.EndHorizontal();
+                    break;
+            }
+
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("cellSize"));
         }
-        
+        else
+        {
+            switch (gridLayout.preset)
+            {
+                case DynamicGridLayout.Presets.vertical_list:
+                    gridLayout.fitType = DynamicGridLayout.FitType.FIXED_COLUMNS;
+                    gridLayout.rows = 1;
+                    EditorGUILayout.PropertyField(serializedObject.FindProperty("fixedRatio"));
+                    break;
+                case DynamicGridLayout.Presets.horizontal_list:
+                    break;
+                case DynamicGridLayout.Presets.item_grid_v:
+                    break;
+            }
+        }
 
-        EditorGUILayout.PropertyField(serializedObject.FindProperty("cellSize"));
+        // general layout settings:
+        EditorGUILayout.Space(10);
 
+        // spacing
         EditorGUILayout.PropertyField(serializedObject.FindProperty("spacing"));
 
+        // padding
         SerializedProperty paddingProp = serializedObject.FindProperty("m_Padding");
         EditorGUILayout.PropertyField(paddingProp, true);
 
 
         serializedObject.ApplyModifiedProperties();
+
+        //if(GUILayout.Button("print values"))
+        //{
+        //    string LogText = "";
+
+        //    LogText += "fit type: " + gridLayout.fitType + "\n";
+        //    LogText += "rows: " + gridLayout.rows + "\n";
+        //    LogText += "fixedRatio: " + gridLayout.fixedRatio + "\n";
+        //    LogText += "Child size: " + gridLayout.cellSize + "\n";
+
+        //    Debug.Log(LogText);
+        //}
     }
 
     private void childRatio(DynamicGridLayout gridLayout)

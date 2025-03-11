@@ -5,6 +5,14 @@ using UnityEngine.UI;
 [ExecuteAlways]
 public class DynamicGridLayout : LayoutGroup
 {
+    public enum Presets
+    {
+        Custom,
+        vertical_list, 
+        horizontal_list,
+        item_grid_v
+    }
+
     public enum FitType
     {
         UNIFORM,
@@ -21,6 +29,7 @@ public class DynamicGridLayout : LayoutGroup
         Free
     }
 
+    public Presets preset = Presets.Custom;
     public FitType fitType = FitType.UNIFORM;
     public ChildRatio childRatio = ChildRatio.Fixed;
     public Vector2 fixedRatio = new Vector2(4, 1);
