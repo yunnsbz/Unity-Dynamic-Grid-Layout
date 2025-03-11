@@ -16,6 +16,7 @@ public class DynamicGridLayoutEditor : Editor
 
         EditorGUILayout.Space(10);
 
+
         if (gridLayout.preset == DynamicGridLayout.Presets.Custom)
         {
             EditorGUILayout.PropertyField(serializedObject.FindProperty("fitType"));
@@ -54,17 +55,13 @@ public class DynamicGridLayoutEditor : Editor
             switch (gridLayout.preset)
             {
                 case DynamicGridLayout.Presets.vertical_list:
-                    gridLayout.fitType = DynamicGridLayout.FitType.FIXED_COLUMNS;
-                    gridLayout.columns = 1;
-                    gridLayout.childRatio = DynamicGridLayout.ChildRatio.Fixed;
-                    gridLayout.fitY = true;
-                    gridLayout.fitX = true;
-                    
                     EditorGUILayout.PropertyField(serializedObject.FindProperty("fixedRatio"));
                     break;
                 case DynamicGridLayout.Presets.horizontal_list:
+                    EditorGUILayout.PropertyField(serializedObject.FindProperty("fixedRatio"));
                     break;
                 case DynamicGridLayout.Presets.item_grid_v:
+                    EditorGUILayout.PropertyField(serializedObject.FindProperty("columns"));
                     break;
             }
         }

@@ -29,23 +29,32 @@ public class DynamicGridLayout : LayoutGroup
 
         if (columns <= 0) columns = 1;
         if (rows <= 0) rows = 1;
+        if (fixedRatio.x <= 0) fixedRatio.x = 1;
+        if (fixedRatio.y <= 0) fixedRatio.y = 1;
+
 
         switch (preset)
         {
             case Presets.vertical_list:
                 fitType = FitType.FIXED_COLUMNS;
                 columns = 1;
-                rows = transform.childCount;
+                childRatio = ChildRatio.Fixed;
+                fitY = true;
+                fitX = true;
                 break;
             case Presets.horizontal_list:
                 fitType = FitType.FIXED_ROWS;
                 rows = 1;
                 columns = transform.childCount;
+                fitY = true;
+                fitX = true;
                 break;
             case Presets.item_grid_v:
-                fitType = FitType.UNIFORM;
-                float squareRoot = Mathf.Sqrt(transform.childCount);
-                rows = columns = Mathf.CeilToInt(squareRoot);
+                fitType = FitType.FIXED_COLUMNS;
+                rows = 4;
+                childRatio = ChildRatio.Square;
+                fitY = true;
+                fitX = true;
                 break;
         }
 
@@ -92,6 +101,10 @@ public class DynamicGridLayout : LayoutGroup
             case ChildRatio.Fixed:
                 if (fitX) cellHeight = cellWidth * (fixedRatio.y / fixedRatio.x);
                 if (fitY) cellWidth = cellHeight * (fixedRatio.x / fixedRatio.y);
+
+                cellSize.y = cellWidth * (fixedRatio.y / (float)fixedRatio.x);
+                cellSize.x = cellHeight * (fixedRatio.x / (float)fixedRatio.y);
+
                 break;
             case ChildRatio.Square:
                 if (fitX || fitY) cellHeight = cellWidth = Mathf.Min(cellWidth, cellHeight);
@@ -114,6 +127,7 @@ public class DynamicGridLayout : LayoutGroup
         {
             float totalWidth = (cellWidth * columns) + (spacing.x * (columns - 1)) + padding.right + padding.left;
             rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, totalWidth);
+
         }
 
         int columnCount = 0;
