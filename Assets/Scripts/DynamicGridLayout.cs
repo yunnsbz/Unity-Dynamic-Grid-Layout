@@ -152,8 +152,8 @@ public class DynamicGridLayout : LayoutGroup
             var adjustmentX = 0 - cellSize.x;
             var adjustmentY = 0 - cellSize.y;
 
-            rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, (adjustmentX * 2 * rows) + (spacing.y * (rows - 1)) + padding.top + padding.bottom);
-            rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, (adjustmentY * 2 * columns) + (spacing.x * (columns - 1)) + padding.right + padding.left);
+            rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, (adjustmentY * 2 * rows) + (spacing.y * (rows - 1)) + padding.top + padding.bottom);
+            rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, (adjustmentX * 2 * columns) + (spacing.x * (columns - 1)) + padding.right + padding.left);
 
             if (cellSize.x <= 0 || cellSize.y <= 0)
             {
