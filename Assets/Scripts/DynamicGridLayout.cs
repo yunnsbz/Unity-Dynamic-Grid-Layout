@@ -4,20 +4,77 @@ using UnityEngine;
 [ExecuteAlways]
 public class DynamicGridLayout : LayoutGroup
 {
+    /// <summary>
+    /// Enum for the presets of the grid layout.
+    /// </summary>
     public enum Presets { Custom, vertical_list, horizontal_list, item_grid_v }
-    public enum FitType { UNIFORM, WIDTH, HEIGHT, FIXED_ROWS, FIXED_COLUMNS }
-    public enum ChildRatio { Square, Fixed, Free }
 
+    /// <summary>
+    /// FitType enum defines how the layout will adjust the size of the cells in the grid.
+    /// </summary>
+    public enum FitType
+    {
+        /// <summary>
+        /// Cells will be resized uniformly to fit within the available space. child ratio will be ignored.
+        /// </summary>
+        UNIFORM,
+
+        /// <summary>
+        /// Cells will be resized to fit the width of the layout, maintaining their aspect ratio.
+        /// </summary>
+        WIDTH,
+
+        /// <summary>
+        /// Cells will be resized to fit the height of the layout, maintaining their aspect ratio.
+        /// </summary>
+        HEIGHT,
+
+        /// <summary>
+        /// The number of rows is fixed, and the layout will adjust the number of columns based on the available space.
+        /// </summary>
+        FIXED_ROWS,
+
+        /// <summary>
+        /// The number of columns is fixed, and the layout will adjust the number of rows based on the available space.
+        /// </summary>
+        FIXED_COLUMNS
+    }
+
+    /// <summary>
+    /// defines how the child elements will be resized in relation to each other.
+    /// </summary>
+    public enum ChildRatio {
+
+        /// <summary>
+        /// All children will have the same size. and the same aspect ratio.
+        /// </summary>
+        Square,
+
+        /// <summary>
+        /// Children will have a fixed aspect ratio defined by fixedRatio.
+        /// </summary>
+        Fixed,
+
+        /// <summary>
+        /// Children will have their own size and aspect ratio.
+        /// </summary>
+        Free
+    }
+
+
+    // set the default values for the properties
     public Presets preset = Presets.Custom;
     public FitType fitType = FitType.UNIFORM;
     public ChildRatio childRatio = ChildRatio.Fixed;
     public Vector2 fixedRatio = new Vector2(4, 1);
 
+    // fields for the layout
     public int rows;
     public int columns;
     public Vector2 cellSize;
     public Vector2 spacing;
 
+    // for layout behaviors
     public bool fitX;
     public bool fitY;
     public bool resizeX;
@@ -111,7 +168,7 @@ public class DynamicGridLayout : LayoutGroup
                 break;
         }
 
-        if (preset == Presets.Custom && !fitX && !fitY) { /* cellSize manuel kalýr */ }
+        if (preset == Presets.Custom && !fitX && !fitY) { }
         else
         {
             if (fitX) cellSize.x = cellWidth;
@@ -181,7 +238,7 @@ public class DynamicGridLayout : LayoutGroup
 
     }
 
-
+    // arbitrary methods to satisfy the LayoutGroup class
     public override void CalculateLayoutInputVertical() { }
     public override void SetLayoutHorizontal() { }
     public override void SetLayoutVertical() { }

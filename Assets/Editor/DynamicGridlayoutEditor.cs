@@ -12,11 +12,12 @@ public class DynamicGridLayoutEditor : Editor
         
         serializedObject.Update();
 
+        // show presets enum
         EditorGUILayout.PropertyField(serializedObject.FindProperty("preset"));
 
         EditorGUILayout.Space(10);
 
-
+        // if the preset is set to custom, show the rest of the properties
         if (gridLayout.preset == DynamicGridLayout.Presets.Custom)
         {
             EditorGUILayout.PropertyField(serializedObject.FindProperty("fitType"));
@@ -26,12 +27,12 @@ public class DynamicGridLayoutEditor : Editor
             {
                 case DynamicGridLayout.FitType.FIXED_ROWS:
                     EditorGUILayout.PropertyField(serializedObject.FindProperty("rows"));
-                    childRatio(gridLayout);
+                    ChildRatio(gridLayout);
                     break;
 
                 case DynamicGridLayout.FitType.FIXED_COLUMNS:
                     EditorGUILayout.PropertyField(serializedObject.FindProperty("columns"));
-                    childRatio(gridLayout);
+                    ChildRatio(gridLayout);
                     break;
 
                 case DynamicGridLayout.FitType.UNIFORM:
@@ -52,6 +53,7 @@ public class DynamicGridLayoutEditor : Editor
         }
         else
         {
+            // if the preset is not custom, show the dedicated preset properties
             switch (gridLayout.preset)
             {
                 case DynamicGridLayout.Presets.vertical_list:
@@ -67,6 +69,7 @@ public class DynamicGridLayoutEditor : Editor
         }
 
         // general layout settings:
+
         EditorGUILayout.Space(10);
 
         // spacing
@@ -80,7 +83,10 @@ public class DynamicGridLayoutEditor : Editor
         serializedObject.ApplyModifiedProperties();
     }
 
-    private void childRatio(DynamicGridLayout gridLayout)
+    /// <summary>
+    /// display and manage the properties related to the child ratio
+    /// </summary>
+    private void ChildRatio(DynamicGridLayout gridLayout)
     {
         EditorGUILayout.PropertyField(serializedObject.FindProperty("childRatio"));
 
