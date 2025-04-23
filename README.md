@@ -12,6 +12,7 @@ Customizable: Easily tweak grid properties to fit your project’s needs.
 Test Scene Included: Comes with a sample scene to showcase how the tool works in action.
 
 Presets: select predefined grid presets to customize grid layouts effortlessly.
+<br></br>
 
 ## Updates
 
@@ -19,11 +20,12 @@ This section tracks the progress of the Dynamic Grid Layout Tool, including rece
 
 ### Recent Updates
 - **06 March 2025**: Initial release of the tool with basic dynamic grid functionality and a test scene.
-- **12 March 2025**: Inspector GUI improvments added. 
+- **12 March 2025**: Inspector GUI improvments added.
+- **23 April 2025**: Documentation improvements added
 
 ### Planned Features
 - Integration with Unity’s Layout Group components for enhanced compatibility.
-- Documentation improvements.
+- PDF Documentation.
 - Alignment options will be added.
 - Support for grid items of different sizes.
 - Custom functions for adding items via script.
@@ -33,18 +35,23 @@ This section tracks the progress of the Dynamic Grid Layout Tool, including rece
 <br></br>
 
 ## Installation
-Download or Clone: Get the repository by downloading the ZIP file or cloning it with git clone https://github.com/yunnsbz/Unity-Dynamic-Grid-Layout.git
+Download or Clone: Get the repository by downloading the ZIP file or cloning it with git clone:
+
+```https://github.com/yunnsbz/Unity-Dynamic-Grid-Layout.git```
 
 Open in Unity: Launch Unity Hub, click "Open," and select the project folder.
 
 Unity Version: Recommended to use Unity 2022.3 or later for compatibility.
 
-Test It: Open the Scenes/SampleScene in the project to see the tool in action. Delete or duplicate grid items in the layout and see how it reacts to the changes
+Test It: Open the ```Scenes/SampleScene``` in the project to see the tool in action. Delete or duplicate grid items in the layout and see how it reacts to the changes
+<br></br>
 
 ## Usage
 Add the DynamicGridLayout script to a UI GameObject (e.g., a panel or canvas).
 
-Configure the grid settings in the Inspector (e.g., cell size, spacing, row/column limits).
+Select a preset in the Inspector (e.g., custom, vertical list, horizontal list)
+
+Configure the grid settings in the Inspector (e.g., cell size, spacing, padding row/column limits).
 
 Populate the grid with content (e.g., buttons, images) manually or via script.
 
