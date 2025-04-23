@@ -7,7 +7,16 @@ public class DynamicGridLayout : LayoutGroup
     /// <summary>
     /// Enum for the presets of the grid layout.
     /// </summary>
-    public enum Presets { Custom, vertical_list, horizontal_list, item_grid_v }
+    public enum Presets {
+        /// <summary>
+        /// Custom preset allows the user to define their own layout.
+        /// </summary>
+        Custom, 
+
+        vertical_list, 
+        horizontal_list, 
+        item_grid_v 
+    }
 
     /// <summary>
     /// FitType enum defines how the layout will adjust the size of the cells in the grid.
@@ -15,7 +24,7 @@ public class DynamicGridLayout : LayoutGroup
     public enum FitType
     {
         /// <summary>
-        /// Cells will be resized uniformly to fit within the available space. child ratio will be ignored.
+        /// Cells will be resized uniformly to fit within the available space. 
         /// </summary>
         UNIFORM,
 
@@ -77,9 +86,6 @@ public class DynamicGridLayout : LayoutGroup
     // for layout behaviors
     public bool fitX;
     public bool fitY;
-    public bool resizeX;
-    public bool resizeY;
-
 
     public override void CalculateLayoutInputHorizontal()
     {
@@ -130,8 +136,49 @@ public class DynamicGridLayout : LayoutGroup
                     fitY = true;
                     break;
                 case FitType.UNIFORM:
-                    fitX = fitY = true;
-                    resizeX = resizeY = false;
+                    fitX = true;
+                    fitY = true;
+                    rows = columns = Mathf.CeilToInt(squareRoot);
+
+                    float _parentWidth = rectTransform.rect.width;
+                    float _parentHeight = rectTransform.rect.height;
+
+                    float _cellWidth = _parentWidth / (float)columns - ((spacing.x / (float)columns) * (columns - 1))
+                        - (padding.left / (float)columns) - (padding.right / (float)columns);
+                    float _cellHeight = _parentHeight / (float)rows - ((spacing.y / (float)rows) * (rows - 1))
+                        - (padding.top / (float)rows) - (padding.bottom / (float)rows);
+
+                    // Hücre boyutlarýný childRatio'ya göre ayarla
+                    switch (childRatio)
+                    {
+                        case ChildRatio.Square:
+                            cellSize.x = cellSize.y = Mathf.Min(_cellWidth, _cellHeight);
+                            break;
+                        case ChildRatio.Fixed:
+                            // En küçük boyutu temel al ve oraný koru
+                            float ratio = fixedRatio.x / fixedRatio.y;
+                            if (_cellWidth / ratio <= _cellHeight)
+                            {
+                                cellSize.x = _cellWidth;
+                                cellSize.y = _cellWidth / ratio;
+                            }
+                            else
+                            {
+                                cellSize.y = _cellHeight;
+                                cellSize.x = _cellHeight * ratio;
+                            }
+                            break;
+                        case ChildRatio.Free:
+                            cellSize.x = _cellWidth;
+                            cellSize.y = _cellHeight;
+                            break;
+                    }
+
+                    // Layout boyutlarýný güncelle
+                    float totalWidth = (cellSize.x * columns) + (spacing.x * (columns - 1)) + padding.left + padding.right;
+                    float totalHeight = (cellSize.y * rows) + (spacing.y * (rows - 1)) + padding.top + padding.bottom;
+                    rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, totalWidth);
+                    rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, totalHeight);
                     break;
             }
         }

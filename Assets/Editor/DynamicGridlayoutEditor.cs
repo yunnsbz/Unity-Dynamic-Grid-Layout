@@ -36,16 +36,7 @@ public class DynamicGridLayoutEditor : Editor
                     break;
 
                 case DynamicGridLayout.FitType.UNIFORM:
-                    var fitX = serializedObject.FindProperty("fitX");
-                    var fitY = serializedObject.FindProperty("fitY");
-                    EditorGUILayout.BeginHorizontal();
-                    EditorGUILayout.LabelField("Fit", GUILayout.Width(EditorGUIUtility.labelWidth - 1));
-                    EditorGUILayout.LabelField("X", GUILayout.MaxWidth(13));
-                    fitX.boolValue = EditorGUILayout.ToggleLeft("", fitX.boolValue, GUILayout.Width(20));
-                    GUILayout.Space(20);
-                    EditorGUILayout.LabelField("Y", GUILayout.MaxWidth(13));
-                    fitY.boolValue = EditorGUILayout.ToggleLeft("", fitY.boolValue, GUILayout.Width(20));
-                    EditorGUILayout.EndHorizontal();
+                    ChildRatio(gridLayout);
                     break;
             }
 
